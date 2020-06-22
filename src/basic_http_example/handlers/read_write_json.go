@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -21,24 +20,19 @@ func NewGreeting(m string) *Greeting {
 func GenericHello(rw http.ResponseWriter, r *http.Request) {
 	var g Greeting
 
-	body, err := ioutil.ReadAll(r.Body)
+	decoder := json.NewDecoder(r.Body)
+	decodeErr := decoder.Decode(&g)
 
-	if err != nil {
+	if decodeErr != nil {
 		http.Error(rw, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
-	umErr := json.Unmarshal(body, &g)
+	encoder := json.NewEncoder(rw)
+	encodeErr := encoder.Encode(g)
 
-	if umErr != nil {
-		http.Error(rw, "Bad Request", http.StatusBadRequest)
-		return
-	}
-
-	data, err := json.Marshal(g)
-
-	if err != nil {
+	if encodeErr != nil {
 		fmt.Println("Error....")
+		return
 	}
-	fmt.Fprint(rw, string(data))
 }
