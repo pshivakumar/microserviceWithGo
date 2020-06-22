@@ -6,6 +6,14 @@ import (
 )
 
 //Hello - struct
-func Hello(rw http.ResponseWriter, r *http.Request) {
+type Hello struct{}
+
+//NewHello - func
+func NewHello() http.Handler {
+	return Hello{}
+}
+
+//Hello - interface implemented
+func (h Hello) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(rw, "Hello World")
 }

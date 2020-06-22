@@ -12,13 +12,11 @@ type Greeting struct {
 }
 
 //NewGreeting - func
-func NewGreeting(m string) *Greeting {
-	return &Greeting{m}
+func NewGreeting() http.Handler {
+	return Greeting{}
 }
 
-//GenericHello - func
-func GenericHello(rw http.ResponseWriter, r *http.Request) {
-	var g Greeting
+func (g Greeting) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	decoder := json.NewDecoder(r.Body)
 	decodeErr := decoder.Decode(&g)
